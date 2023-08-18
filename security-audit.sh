@@ -18,7 +18,7 @@ check_security() {
 }
 
 # Check 1: Update System
-check_security "Update System" "apt update && apt upgrade -y"
+check_security "Update System" "apt update && apt upgrade"
 
 # Check 2: Firewall Status
 check_security "Firewall Status" "ufw status"
@@ -27,10 +27,10 @@ check_security "Firewall Status" "ufw status"
 check_security "Listening Ports" "netstat -tuln"
 
 # Check 4: Check for Uncommon Users
-check_security "Uncommon Users" "awk -F: '$3 < 1000 {print $1}' /etc/passwd"
+check_security "Uncommon Users" "awk -F: '\$3 < 1000 {print \$1}' /etc/passwd"
 
 # Check 5: Sudo Access
-check_security "Sudo Access" "grep -Po '^sudo.+:\K.*' /etc/group"
+check_security "Sudo Access" "getent group sudo"
 
 # Check 6: Root SSH Access
 check_security "Root SSH Access" "grep -i 'PermitRootLogin' /etc/ssh/sshd_config"
@@ -45,7 +45,7 @@ check_security "World-Writable Files" "find / -xdev -type f -perm -o+w"
 check_security "World-Writable Directories" "find / -xdev -type d -perm -o+w"
 
 # Check 10: Check for SUID/SGID Files
-check_security "SUID/SGID Files" "find / -xdev \( -perm -4000 -o -perm -2000 \) -type f"
+check_security "SUID/SGID Files" "find / -xdev \( -perm -4000 -o -perm -2000 \) -type f 2>/dev/null"
 
 # Check 11: Check for Noowner Files
 check_security "Noowner Files" "find / -xdev -nouser -o -nogroup"
